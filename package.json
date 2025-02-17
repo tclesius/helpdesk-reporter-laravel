@@ -26,6 +26,7 @@
     "dependencies": {
         "@inertiajs/vue3": "^1.2.0",
         "chart.js": "^3.7.1",
+        "chartjs-plugin-datalabels": "^2.2.0",
         "date-fns": "^2.29.3",
         "jspdf": "^2.5.1"
     }

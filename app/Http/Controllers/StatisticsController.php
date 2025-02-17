@@ -44,12 +44,17 @@ class StatisticsController extends Controller
             ->first()
             ->toArray();
 
+        $attendancesByType = Attendance::where('semester', $semester)
+            ->selectRaw('SUM(CASE WHEN online = 1 THEN 1 ELSE 0 END) as online, SUM(CASE WHEN online = 0 THEN 1 ELSE 0 END) as presence')
+            ->first()
+            ->toArray();
 
         return Inertia::render('Statistics/Overview', [
             'attendancesByWeek' => $attendancesByWeek,
             'attendancesByFaculty' => $attendancesByFaculty,
             'attendancesByDegree' => $attendancesByDegree,
             'attendancesByTopic' => $attendancesByTopic,
+            'attendancesByType' => $attendancesByType,
             'semesters' => Semester::orderBy('start', 'DESC')->get(),
             'currentSem' => $request->query->get('semester'),
         ]);

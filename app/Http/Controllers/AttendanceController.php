@@ -99,8 +99,15 @@ class AttendanceController extends Controller
     {
         $days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
         $table = Attendance::where('semester', $semester->semester)->get();
-        $filename = 'export.csv';
-        $handle = fopen($filename, 'w+');
+        
+        // Erstelle temporäre Datei
+        $tempFile = tempnam(sys_get_temp_dir(), 'attendance_export_');
+        $handle = fopen($tempFile, 'w+');
+        
+        if ($handle === false) {
+            return response()->json(['error' => 'Konnte keine temporäre Datei erstellen'], 500);
+        }
+
         fwrite($handle, "sep=,\n");
         fputcsv($handle, [
             'Semester',
@@ -148,8 +155,12 @@ class AttendanceController extends Controller
 
         $headers = [
             'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="export.csv"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
         ];
 
-        return \Illuminate\Support\Facades\Response::download($filename, 'export.csv', $headers);
+        return response()->download($tempFile, 'export.csv', $headers)->deleteFileAfterSend(true);
     }
 }
