@@ -81,7 +81,7 @@ class AttendanceController extends Controller
         $attendance->physics = $data['physics'];
         $attendance->chemistry = $data['chemistry'];
         $attendance->organization = $data['organization'];
-        $attendance->remote = $data['remote'];
+        $attendance->online = $data['online'];
 
         $attendance->save();
 
@@ -119,7 +119,7 @@ class AttendanceController extends Controller
             'Chemie',
             'Orga.',
             'Tutor',
-            'Remote'
+            'Online'
         ]);
 
         foreach ($table as $row) {
@@ -140,7 +140,7 @@ class AttendanceController extends Controller
                 $row['chemistry'] ? 'x' : '',
                 $row['organization'] ? 'x' : '',
                 User::find($row['user_id'])->name,
-                $row['remote'] ? 'x' : '',
+                $row['online'] ? 'x' : '',
             ]);
         }
 
